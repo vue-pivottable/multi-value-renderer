@@ -1,0 +1,119 @@
+/**
+ * Multi-Value Renderer Styles
+ *
+ * Styles for the multi-value table renderer.
+ * Import this CSS alongside your vue-pivottable styles.
+ */
+
+/* Multi-value table */
+.pvtMultiValueTable {
+  border-collapse: collapse;
+}
+
+/* Multi-value cell container */
+.multi-value-cell {
+  display: flex;
+  gap: 4px;
+}
+
+.multi-value-cell.layout-vertical {
+  flex-direction: column;
+}
+
+.multi-value-cell.layout-horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Individual value item */
+.multi-value-item {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.multi-value-item:not(:last-child) {
+  padding-bottom: 2px;
+}
+
+/* Value label (e.g., "Sales:") */
+.multi-value-label {
+  color: #666;
+  font-size: 0.85em;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+/* Value number */
+.multi-value-value {
+  font-weight: 500;
+}
+
+/* Multi-value cells in table */
+.pvtMultiVal {
+  padding: 6px 8px !important;
+  vertical-align: top;
+  min-width: 80px;
+}
+
+/* Horizontal layout adjustments */
+.layout-horizontal .multi-value-item {
+  padding-right: 8px;
+  border-right: 1px solid #eee;
+}
+
+.layout-horizontal .multi-value-item:last-child {
+  padding-right: 0;
+  border-right: none;
+}
+
+/* Compact layout - no special styling needed */
+
+/* Hover effects */
+.pvtMultiVal:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Totals styling */
+.pvtTotal.pvtMultiVal,
+.pvtGrandTotal.pvtMultiVal {
+  background-color: #f8f8f8;
+  font-weight: 600;
+}
+
+.pvtTotal.pvtMultiVal .multi-value-value,
+.pvtGrandTotal.pvtMultiVal .multi-value-value {
+  font-weight: 600;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .multi-value-label {
+    color: #aaa;
+  }
+
+  .layout-horizontal .multi-value-item {
+    border-right-color: #444;
+  }
+
+  .pvtMultiVal:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .pvtTotal.pvtMultiVal,
+  .pvtGrandTotal.pvtMultiVal {
+    background-color: #2a2a2a;
+  }
+}
+
+/* Print styles */
+@media print {
+  .multi-value-label {
+    color: #333;
+  }
+
+  .pvtMultiVal:hover {
+    background-color: transparent;
+  }
+}
