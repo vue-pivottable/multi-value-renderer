@@ -41,11 +41,6 @@
       />
     </div>
 
-    <div class="data-info">
-      <h3>Sample Data</h3>
-      <pre>{{ JSON.stringify(data.slice(0, 3), null, 2) }}
-... ({{ data.length }} records total)</pre>
-    </div>
   </div>
 </template>
 
@@ -53,7 +48,7 @@
 import { VuePivottableUi, PivotUtilities } from 'vue-pivottable'
 import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue2'
 import 'vue-pivottable/dist/vue-pivottable.css'
-import '@vue-pivottable/multi-value-renderer/styles.css'
+import '../../../dist/styles.css'
 
 export default {
   name: 'App',
@@ -176,23 +171,6 @@ p {
   padding: 24px;
   margin-bottom: 20px;
   overflow-x: auto;
-}
-
-.data-info {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.data-info pre {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  font-size: 12px;
-  overflow-x: auto;
-  color: #555;
 }
 
 /* Responsive */
