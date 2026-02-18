@@ -1,6 +1,6 @@
 {
   "name": "@vue-pivottable/multi-value-renderer",
-  "version": "0.3.1-beta.0",
+  "version": "0.3.1",
   "description": "Multi-value aggregator renderer for vue-pivottable (Vue 2/3 compatible)",
   "author": "Seungwoo321",
   "license": "MIT",
