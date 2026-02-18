@@ -1,0 +1,25 @@
+# Changelog
+
+## 0.2.0-beta.0 (2026-02-18)
+
+### Features
+
+* initial commit with npm publish workflows ([16897bf](https://github.com/vue-pivottable/multi-value-renderer/commit/16897bfdc22dae220c62b2f4dd3e75cd40b79531))
+
+### Bug Fixes
+
+* **examples:** update style import path to use package name ([6da61cd](https://github.com/vue-pivottable/multi-value-renderer/commit/6da61cd8221f1e3051c19c5406ad18cd52bd42ef))
+* **package:** add styles.css shorthand export path ([8a39c38](https://github.com/vue-pivottable/multi-value-renderer/commit/8a39c38570e2c3b4b2131745e48117d9a752d917))
+* remove registry-url for OIDC trusted publishing [skip ci] ([befa5a1](https://github.com/vue-pivottable/multi-value-renderer/commit/befa5a1b979fc94860741b49172a5cfec1252eea))
+* update example package-lock.json files ([b8958cc](https://github.com/vue-pivottable/multi-value-renderer/commit/b8958cc5f97692bb97c5fe6fbe6358afe5c06958))
+* **vue2:** correct staticClass format for Vue 2 renderer ([6c79170](https://github.com/vue-pivottable/multi-value-renderer/commit/6c79170b8fe8c0e4ea72f7d0ff71735a9c61eb86))
+
+### Refactoring
+
+* **examples:** remove sample data section and use local styles ([fc83298](https://github.com/vue-pivottable/multi-value-renderer/commit/fc83298e461b14ddac1ff26ca0e3bc59f7d0be64))
+
+### Documentation
+
+* add deployment guide for NPM publishing ([07ffdcc](https://github.com/vue-pivottable/multi-value-renderer/commit/07ffdcc0252af48dfd3fcd4d129b1ce8cd58e6b0))
+* add examples and related issue documentation ([4e6a57f](https://github.com/vue-pivottable/multi-value-renderer/commit/4e6a57f3fc0a5bbd33c94780e90c30eb9a31d432))
+* add screenshot examples to README ([f500091](https://github.com/vue-pivottable/multi-value-renderer/commit/f50009127fa4cc147861db8349cfd37297e9bdfe))
