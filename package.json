@@ -24,6 +24,7 @@
       "import": "./dist/vue3.mjs",
       "require": "./dist/vue3.js"
     },
+    "./styles.css": "./dist/styles.css",
     "./dist/styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
