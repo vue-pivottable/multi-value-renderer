@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@vue-pivottable/multi-value-renderer':
-        specifier: ^0.2.0
-        version: 0.2.1(vue@3.5.28)
+        specifier: ^0.3.0-beta.1
+        version: 0.3.0-beta.2(vue-pivottable@1.2.2(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)
       vue:
         specifier: ^3.4.0
         version: 3.5.28
@@ -320,10 +320,11 @@ packages:
       vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
 
-  '@vue-pivottable/multi-value-renderer@0.2.1':
-    resolution: {integrity: sha512-+LbbSminlwUyCnrymaw/oHb5onfrIlyRRlEQCPAnZKkfK+mEsMBUGAYr6mvh18tAc9WamwfyD3WT25JM9DOV1g==}
+  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2':
+    resolution: {integrity: sha512-Q3F8VcFDcu5DiCkAF56ow0UkdNdmLdH/t5CcOOV6d9sWECzss90RmlBYW4OjTBmZRUdQG64YOXKn7SOotqbMAw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
+      vue-pivottable: ^0.4.0 || ^1.0.0
 
   '@vue/compiler-core@3.5.28':
     resolution: {integrity: sha512-kviccYxTgoE8n6OCw96BNdYlBg2GOWfBuOW4Vqwrt7mSKWKwFVvI8egdTltqRgITGPsTFYtKYfxIG8ptX2PJHQ==}
@@ -619,9 +620,10 @@ snapshots:
       vite: 5.4.21
       vue: 3.5.28
 
-  '@vue-pivottable/multi-value-renderer@0.2.1(vue@3.5.28)':
+  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2(vue-pivottable@1.2.2(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)':
     dependencies:
       vue: 3.5.28
+      vue-pivottable: 1.2.2(sortablejs@1.15.7)(vue@3.5.28)
 
   '@vue/compiler-core@3.5.28':
     dependencies:
