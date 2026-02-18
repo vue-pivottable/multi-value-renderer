@@ -50,7 +50,7 @@ import { ref } from 'vue'
 import { VuePivottable, VuePivottableUi } from 'vue-pivottable'
 import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer'
 import 'vue-pivottable/dist/vue-pivottable.css'
-import '../../../dist/styles.css'
+import '@vue-pivottable/multi-value-renderer/styles.css'
 
 const activeTab = ref('table')
 

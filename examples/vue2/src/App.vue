@@ -48,7 +48,7 @@
 import { VuePivottableUi, PivotUtilities } from 'vue-pivottable'
 import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue2'
 import 'vue-pivottable/dist/vue-pivottable.css'
-import '../../../dist/styles.css'
+import '@vue-pivottable/multi-value-renderer/styles.css'
 
 export default {
   name: 'App',
