@@ -2,6 +2,11 @@
 
 Multi-value aggregator renderer for vue-pivottable. Display multiple aggregated values per cell, each with its own aggregation function.
 
+## Demo
+
+- [Vue 3 Demo](https://multivalue-vue3.pages.dev/)
+- [Vue 2 Demo](https://multivalue-vue2.pages.dev/)
+
 ## Screenshots
 
 ### Vue 3 - PivotTable
