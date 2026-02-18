@@ -2,6 +2,24 @@
 
 Multi-value aggregator renderer for vue-pivottable. Display multiple aggregated values per cell, each with its own aggregation function.
 
+## Screenshots
+
+### Vue 3 - PivotTable
+
+![Vue 3 Example](examples/screenshot-vue3.png)
+
+### Vue 3 - PivotTable UI
+
+![Vue 3 UI Example](examples/screenshot-vue3-ui.png)
+
+### Vue 2 - PivotTable
+
+![Vue 2 Example](examples/screenshot-vue2.png)
+
+### Vue 2 - PivotTable UI
+
+![Vue 2 UI Example](examples/screenshot-vue2-ui.png)
+
 ## Features
 
 - **Multiple Values per Cell**: Display sales (Sum), quantity (Average), and more in a single pivot table cell
@@ -138,7 +156,7 @@ Custom display labels for value columns:
 Import the included CSS for default styling:
 
 ```js
-import '@vue-pivottable/multi-value-renderer/dist/styles.css'
+import '@vue-pivottable/multi-value-renderer/styles.css'
 ```
 
 Or customize with your own CSS targeting these classes:
