@@ -247,7 +247,7 @@ export function makeMultiValueRenderer(opts = {}) {
                 }, `${label}: `)
               : null,
             h('span', {
-              staticClass: ['multi-value-value']
+              staticClass: 'multi-value-value'
             }, formatted)
           ])
         })
@@ -257,7 +257,7 @@ export function makeMultiValueRenderer(opts = {}) {
         }
 
         return h('div', {
-          staticClass: ['multi-value-cell', `layout-${this.cellLayout}`]
+          staticClass: `multi-value-cell layout-${this.cellLayout}`
         }, items)
       },
 
@@ -301,7 +301,7 @@ export function makeMultiValueRenderer(opts = {}) {
       } catch (error) {
         console.error('Multi-Value Renderer Error:', error)
         return h('div', {
-          staticClass: ['pvtError']
+          staticClass: 'pvtError'
         }, `Error: ${error.message}`)
       }
 
@@ -331,7 +331,7 @@ export function makeMultiValueRenderer(opts = {}) {
       }
 
       return h('table', {
-        staticClass: ['pvtTable', 'pvtMultiValueTable']
+        staticClass: 'pvtTable pvtMultiValueTable'
       }, [
         // THEAD
         h('thead', [
@@ -349,14 +349,14 @@ export function makeMultiValueRenderer(opts = {}) {
                 : undefined,
 
               // Column attribute label
-              h('th', { staticClass: ['pvtAxisLabel'] }, c),
+              h('th', { staticClass: 'pvtAxisLabel' }, c),
 
               // Column keys
               colKeys.map((colKey, i) => {
                 const x = this.spanSize(colKeys, i, j)
                 if (x === -1) return null
                 return h('th', {
-                  staticClass: ['pvtColLabel'],
+                  staticClass: 'pvtColLabel',
                   attrs: {
                     key: `colKey${i}`,
                     colSpan: x,
@@ -368,7 +368,7 @@ export function makeMultiValueRenderer(opts = {}) {
               // Totals header
               j === 0 && this.rowTotal
                 ? h('th', {
-                    staticClass: ['pvtTotalLabel'],
+                    staticClass: 'pvtTotalLabel',
                     attrs: {
                       rowSpan: colAttrs.length + (rowAttrs.length === 0 ? 0 : 1)
                     }
@@ -382,12 +382,12 @@ export function makeMultiValueRenderer(opts = {}) {
             ? h('tr', [
                 rowAttrs.map((r, i) => {
                   return h('th', {
-                    staticClass: ['pvtAxisLabel'],
+                    staticClass: 'pvtAxisLabel',
                     key: `rowAttr${i}`
                   }, r)
                 }),
                 this.rowTotal
-                  ? h('th', { staticClass: ['pvtTotalLabel'] },
+                  ? h('th', { staticClass: 'pvtTotalLabel' },
                       colAttrs.length === 0 ? this.localeStrings.totals : null)
                   : (colAttrs.length === 0 ? undefined : h('th'))
               ])
@@ -405,7 +405,7 @@ export function makeMultiValueRenderer(opts = {}) {
                 const x = this.spanSize(rowKeys, i, j)
                 if (x === -1) return null
                 return h('th', {
-                  staticClass: ['pvtRowLabel'],
+                  staticClass: 'pvtRowLabel',
                   attrs: {
                     key: `rowKeyLabel${i}-${j}`,
                     rowSpan: x,
@@ -421,7 +421,7 @@ export function makeMultiValueRenderer(opts = {}) {
                 const clickHandler = getClickHandler(value, rowKey, colKey)
 
                 return h('td', {
-                  staticClass: ['pvVal', 'pvtMultiVal'],
+                  staticClass: 'pvVal pvtMultiVal',
                   attrs: { key: `pvtVal${i}-${j}` },
                   on: clickHandler ? { click: clickHandler } : {}
                 }, [this.renderMultiValueCell(h, value, rowKey, colKey)])
@@ -430,7 +430,7 @@ export function makeMultiValueRenderer(opts = {}) {
               // Row total
               this.rowTotal
                 ? h('td', {
-                    staticClass: ['pvtTotal', 'pvtMultiVal'],
+                    staticClass: 'pvtTotal pvtMultiVal',
                     on: getClickHandler(totalAggregator.value(), rowKey, [])
                       ? { click: getClickHandler(totalAggregator.value(), rowKey, []) }
                       : {}
@@ -443,7 +443,7 @@ export function makeMultiValueRenderer(opts = {}) {
           h('tr', [
             this.colTotal
               ? h('th', {
-                  staticClass: ['pvtTotalLabel'],
+                  staticClass: 'pvtTotalLabel',
                   attrs: {
                     colSpan: rowAttrs.length + (colAttrs.length === 0 ? 0 : 1)
                   }
@@ -455,7 +455,7 @@ export function makeMultiValueRenderer(opts = {}) {
                   const totalAggregator = pivotData.getAggregator([], colKey)
                   const clickHandler = getClickHandler(totalAggregator.value(), [], colKey)
                   return h('td', {
-                    staticClass: ['pvtTotal', 'pvtMultiVal'],
+                    staticClass: 'pvtTotal pvtMultiVal',
                     attrs: { key: `total${i}` },
                     on: clickHandler ? { click: clickHandler } : {}
                   }, [this.renderMultiValueCell(h, totalAggregator.value(), [], colKey)])
@@ -464,7 +464,7 @@ export function makeMultiValueRenderer(opts = {}) {
 
             this.colTotal && this.rowTotal
               ? h('td', {
-                  staticClass: ['pvtGrandTotal', 'pvtMultiVal'],
+                  staticClass: 'pvtGrandTotal pvtMultiVal',
                   on: getClickHandler(grandTotalAggregator.value(), [], [])
                     ? { click: getClickHandler(grandTotalAggregator.value(), [], []) }
                     : {}
