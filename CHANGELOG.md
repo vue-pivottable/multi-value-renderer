@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.2-beta.0...v0.2.2-beta.1) (2026-02-18)
+
+## [0.2.2-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.1...v0.2.2-beta.0) (2026-02-18)
+
+### Refactoring
+
+* **config:** remove local development aliases from vite config ([a3d0b9b](https://github.com/vue-pivottable/multi-value-renderer/commit/a3d0b9bd2650434e302055bfc4d84bdd837e55d6))
+
 ## [0.2.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.1-beta.0...v0.2.1) (2026-02-18)
 
 ## [0.2.1-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.0...v0.2.1-beta.0) (2026-02-18)
