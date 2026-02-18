@@ -22,5 +22,6 @@ npm-debug.log*
 .playwright-mcp/
 
 # Example outputs
+examples/**/dist/
 examples/**/node_modules/
 examples/**/.vite/
