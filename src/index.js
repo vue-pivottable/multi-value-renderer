@@ -14,6 +14,5 @@
 // Core utilities (Vue-agnostic)
 export * from './core'
 
-// Default export uses Vue 3
-// For Vue 2, import from '@vue-pivottable/multi-value-renderer/vue2'
-export { MultiValueRenderers, makeMultiValueRenderer } from './vue3'
+// NOTE: For renderers, import directly from /vue2 or /vue3 subpath
+// This avoids bundler issues with shared chunks

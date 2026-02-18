@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0-beta.3](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2026-02-18)
+
+## [0.3.0-beta.2](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2026-02-18)
+
+## [0.3.0-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.0-beta.0...v0.3.0-beta.1) (2026-02-18)
+
+## [0.3.0-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.2...v0.3.0-beta.0) (2026-02-18)
+
+### Features
+
+* **examples:** add aggregators prop to pivot components ([0674116](https://github.com/vue-pivottable/multi-value-renderer/commit/06741169ae4f22694c3626918f561f5346b093b1))
+
+### Refactoring
+
+* **core:** inline multi-value aggregator to avoid chunk imports ([32b3226](https://github.com/vue-pivottable/multi-value-renderer/commit/32b3226ea0e3a7c5f92f920bdcb57d99904c01de))
+
 ## [0.2.2](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.2-beta.1...v0.2.2) (2026-02-18)
 
 ## [0.2.2-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.2.2-beta.0...v0.2.2-beta.1) (2026-02-18)

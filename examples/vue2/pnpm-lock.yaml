@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@vue-pivottable/multi-value-renderer':
-        specifier: ^0.2.0
-        version: 0.2.1(vue@2.7.16)
+        specifier: ^0.3.0-beta.1
+        version: 0.3.0-beta.2(vue-pivottable@0.4.71(vue@2.7.16))(vue@2.7.16)
       vue:
         specifier: ^2.7.16
         version: 2.7.16
       vue-pivottable:
-        specifier: ^0.4.27
-        version: 0.4.70(vue@2.7.16)
+        specifier: ^0.4.71
+        version: 0.4.71(vue@2.7.16)
     devDependencies:
       '@vitejs/plugin-vue2':
         specifier: ^2.3.0
@@ -317,10 +317,11 @@ packages:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
       vue: ^2.7.0-0
 
-  '@vue-pivottable/multi-value-renderer@0.2.1':
-    resolution: {integrity: sha512-+LbbSminlwUyCnrymaw/oHb5onfrIlyRRlEQCPAnZKkfK+mEsMBUGAYr6mvh18tAc9WamwfyD3WT25JM9DOV1g==}
+  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2':
+    resolution: {integrity: sha512-Q3F8VcFDcu5DiCkAF56ow0UkdNdmLdH/t5CcOOV6d9sWECzss90RmlBYW4OjTBmZRUdQG64YOXKn7SOotqbMAw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
+      vue-pivottable: ^0.4.0 || ^1.0.0
 
   '@vue/compiler-sfc@2.7.16':
     resolution: {integrity: sha512-KWhJ9k5nXuNtygPU7+t1rX6baZeqOYLEforUPjgNDBnLicfHCoi48H87Q8XyLZOrNNsmhuwKqtpDQWjEFe6Ekg==}
@@ -402,8 +403,8 @@ packages:
       terser:
         optional: true
 
-  vue-pivottable@0.4.70:
-    resolution: {integrity: sha512-B8t1zks1vOmtE6d/GiEXbGOTDdUa3nHLsYLJndkhiX8nqmRHGT+SWRiDH2Zl60w7pOhkRF0xrAIrm5vQmPqY4w==}
+  vue-pivottable@0.4.71:
+    resolution: {integrity: sha512-903tarMi40VbI3j+ilmQBOi1zrX9b5yAACKB7RWJsDodBbLupqGf2A2Zz/Bw6w92Hp41XonzSM+yptD4X9/Dwg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       vue: ^2.6.10
@@ -581,9 +582,10 @@ snapshots:
       vite: 5.4.21
       vue: 2.7.16
 
-  '@vue-pivottable/multi-value-renderer@0.2.1(vue@2.7.16)':
+  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2(vue-pivottable@0.4.71(vue@2.7.16))(vue@2.7.16)':
     dependencies:
       vue: 2.7.16
+      vue-pivottable: 0.4.71(vue@2.7.16)
 
   '@vue/compiler-sfc@2.7.16':
     dependencies:
@@ -682,7 +684,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vue-pivottable@0.4.70(vue@2.7.16):
+  vue-pivottable@0.4.71(vue@2.7.16):
     dependencies:
       vue: 2.7.16
       vuedraggable: 2.24.3

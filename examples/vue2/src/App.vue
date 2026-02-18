@@ -35,6 +35,7 @@
         :rows="['region']"
         :cols="['product']"
         :vals="['sales', 'quantity']"
+        :aggregators="aggregators"
         :renderers="renderers"
         renderer-name="Multi-Value Table"
         :aggregator-map="aggregatorMap"

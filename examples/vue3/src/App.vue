@@ -22,6 +22,7 @@
         :rows="['region']"
         :cols="['product']"
         :vals="['sales', 'quantity']"
+        :aggregators="aggregators"
         :renderers="renderers"
         renderer-name="Multi-Value Table"
         :aggregator-map="aggregatorMap"
@@ -36,6 +37,7 @@
         :rows="['region']"
         :cols="['product']"
         :vals="['sales', 'quantity']"
+        :aggregators="aggregators"
         :renderers="renderers"
         renderer-name="Multi-Value Table"
         :aggregator-map="aggregatorMap"
@@ -47,8 +49,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { VuePivottable, VuePivottableUi } from 'vue-pivottable'
-import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer'
+import { VuePivottable, VuePivottableUi, PivotUtilities } from 'vue-pivottable'
+import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue3'
 import 'vue-pivottable/dist/vue-pivottable.css'
 import '@vue-pivottable/multi-value-renderer/styles.css'
 
@@ -73,6 +75,8 @@ const data = [
   { region: 'South', product: 'Banana', sales: 85, quantity: 19 },
   { region: 'South', product: 'Orange', sales: 105, quantity: 17 }
 ]
+
+const aggregators = PivotUtilities.aggregators
 
 const renderers = {
   ...MultiValueRenderers
