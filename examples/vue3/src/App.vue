@@ -15,16 +15,14 @@
     </div>
 
     <div class="pivot-container" v-if="activeTab === 'table'">
-      <h2>VuePivottable</h2>
+      <h2>Multi-Value Table</h2>
       <p class="description">Direct pivot table rendering with multi-value cells</p>
-      <VuePivottable
+      <MultiValueTable
         :data="data"
         :rows="['region']"
         :cols="['product']"
         :vals="vals"
         :aggregators="aggregators"
-        :renderers="renderers"
-        renderer-name="Multi-Value Table"
         :aggregator-map="aggregatorMap"
       />
     </div>
@@ -43,17 +41,18 @@
         renderer-name="Multi-Value Table"
         :aggregator-map="aggregatorMap"
       >
-        <template #aggregatorExtra>
+        <template #aggregatorCell>
           <div class="aggregator-settings">
-            <div class="settings-label">Aggregator per Value:</div>
-            <div class="settings-grid">
-              <div v-for="val in vals" :key="val" class="setting-item">
-                <label>{{ val }}:</label>
-                <select v-model="aggregatorMap[val]">
-                  <option v-for="agg in aggregatorNames" :key="agg" :value="agg">{{ agg }}</option>
-                </select>
-              </div>
+            <div class="value-row" v-for="(val, index) in vals" :key="val">
+              <select class="value-select" :value="val" @change="updateVal(index, $event.target.value)">
+                <option v-for="attr in availableAttributes" :key="attr" :value="attr">{{ attr }}</option>
+              </select>
+              <select class="agg-select" :value="aggregatorMap[val] || 'Sum'" @change="updateAggregatorMap(val, $event.target.value)">
+                <option v-for="agg in aggregatorNames" :key="agg" :value="agg">{{ agg }}</option>
+              </select>
+              <button class="remove-btn" @click="removeVal(index)" v-if="vals.length > 1">×</button>
             </div>
+            <button class="add-btn" @click="addVal" v-if="vals.length < availableAttributes.length">+ Add Value</button>
           </div>
         </template>
       </VuePivottableUi>
@@ -63,11 +62,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { VuePivottable, VuePivottableUi, PivotUtilities } from 'vue-pivottable'
+import { ref, computed } from 'vue'
+import { VuePivottableUi, PivotUtilities } from 'vue-pivottable'
 import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue3'
 import 'vue-pivottable/dist/vue-pivottable.css'
 import '@vue-pivottable/multi-value-renderer/styles.css'
+
+// Use renderer directly for table tab
+const MultiValueTable = MultiValueRenderers['Multi-Value Table']
 
 const activeTab = ref('table')
 
@@ -91,7 +93,13 @@ const data = [
   { region: 'South', product: 'Orange', sales: 105, quantity: 17, profit: 33 }
 ]
 
-const vals = ['sales', 'quantity', 'profit']
+// All available attributes from data (excluding rows/cols)
+const availableAttributes = computed(() => {
+  if (data.length === 0) return []
+  return Object.keys(data[0])
+})
+
+const vals = ref(['sales', 'quantity', 'profit'])
 
 const aggregators = PivotUtilities.aggregators
 
@@ -101,11 +109,47 @@ const renderers = {
   ...MultiValueRenderers
 }
 
-const aggregatorMap = reactive({
+const aggregatorMap = ref({
   sales: 'Sum',
   quantity: 'Average',
   profit: 'Sum'
 })
+
+function addVal() {
+  // Find first attribute not already in vals
+  const available = availableAttributes.value.find(attr => !vals.value.includes(attr))
+  if (available) {
+    vals.value = [...vals.value, available]
+    if (!aggregatorMap.value[available]) {
+      aggregatorMap.value = { ...aggregatorMap.value, [available]: 'Sum' }
+    }
+  }
+}
+
+function removeVal(index) {
+  const newVals = [...vals.value]
+  newVals.splice(index, 1)
+  vals.value = newVals
+}
+
+function updateVal(index, newVal) {
+  const newVals = [...vals.value]
+  const oldVal = newVals[index]
+  newVals[index] = newVal
+  vals.value = newVals
+
+  // Copy aggregator setting from old to new if new doesn't have one
+  if (!aggregatorMap.value[newVal] && aggregatorMap.value[oldVal]) {
+    aggregatorMap.value = { ...aggregatorMap.value, [newVal]: aggregatorMap.value[oldVal] }
+  }
+}
+
+function updateAggregatorMap(val, aggName) {
+  // Create new object to trigger reactivity
+  const newMap = { ...aggregatorMap.value, [val]: aggName }
+  console.log('updateAggregatorMap:', val, aggName, newMap)
+  aggregatorMap.value = newMap
+}
 </script>
 
 <style>
@@ -194,53 +238,78 @@ p {
 }
 
 .aggregator-settings {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #e0e0e0;
+  font-family: Verdana, sans-serif;
+  color: #2a3f5f;
+  padding: 5px;
 }
 
-.settings-label {
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.settings-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.setting-item {
+.value-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
-.setting-item label {
-  font-size: 11px;
-  font-weight: 500;
-  color: #555;
-  min-width: 50px;
-}
-
-.setting-item select {
+.value-select,
+.agg-select {
   padding: 3px 6px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-size: 11px;
+  border: 1px solid #a2b1c6;
+  border-radius: 5px;
+  font-size: 12px;
   background: #fff;
+  color: #2a3f5f;
   cursor: pointer;
 }
 
-.setting-item select:hover {
-  border-color: #4a90d9;
+.value-select {
+  min-width: 80px;
 }
 
-.setting-item select:focus {
+.agg-select {
+  min-width: 70px;
+}
+
+.value-select:hover,
+.agg-select:hover {
+  border-color: #506784;
+}
+
+.value-select:focus,
+.agg-select:focus {
   outline: none;
-  border-color: #4a90d9;
-  box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.2);
+  border-color: #119dff;
+}
+
+.remove-btn {
+  background: none;
+  border: 1px solid #c8d4e3;
+  border-radius: 3px;
+  color: #506784;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 6px;
+}
+
+.remove-btn:hover {
+  background: #ebf0f8;
+  border-color: #a2b1c6;
+}
+
+.add-btn {
+  background: #fff;
+  border: 1px solid #a2b1c6;
+  border-radius: 5px;
+  color: #506784;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-top: 2px;
+}
+
+.add-btn:hover {
+  background: #ebf0f8;
+  border-color: #506784;
 }
 
 /* Responsive */
