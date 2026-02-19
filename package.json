@@ -80,5 +80,6 @@
   "homepage": "https://github.com/vue-pivottable/multi-value-renderer#readme",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "packageManager": "pnpm@9.12.2"
 }
