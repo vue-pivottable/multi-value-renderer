@@ -22,7 +22,7 @@
  * />
  */
 
-import { defineComponent, h, markRaw } from 'vue'
+import { defineComponent, h, markRaw, computed } from 'vue'
 import { PivotUtilities } from 'vue-pivottable'
 
 const { PivotData } = PivotUtilities
@@ -334,9 +334,10 @@ export function makeMultiValueRenderer(opts = {}) {
       }
 
       /**
-       * Create PivotData with multi-value aggregation
+       * Create PivotData with multi-value aggregation (computed for reactivity)
        */
-      const createPivotData = () => {
+      const pivotData = computed(() => {
+        console.log('Computing pivotData with aggregatorMap:', props.aggregatorMap)
         const multiValueAgg = createMultiValueAggregator(
           props.aggregatorMap,
           props.aggregators,
@@ -361,7 +362,7 @@ export function makeMultiValueRenderer(opts = {}) {
           rowOrder: props.rowOrder,
           colOrder: props.colOrder
         })
-      }
+      })
 
       return {
         applyLabel,
@@ -369,14 +370,14 @@ export function makeMultiValueRenderer(opts = {}) {
         spanSize,
         formatValue,
         renderMultiValueCell,
-        createPivotData
+        pivotData
       }
     },
 
     render() {
       let pivotData
       try {
-        pivotData = this.createPivotData()
+        pivotData = this.pivotData
       } catch (error) {
         console.error('Multi-Value Renderer Error:', error)
         return h('div', { class: 'pvtError' }, `Error: ${error.message}`)
