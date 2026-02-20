@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@vue-pivottable/multi-value-renderer':
-        specifier: ^0.3.0-beta.1
-        version: 0.3.0-beta.2(vue-pivottable@1.2.2(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)
+        specifier: ^0.4.0-beta.2
+        version: 0.4.0-beta.2(vue-pivottable@1.3.0(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)
       vue:
         specifier: ^3.4.0
         version: 3.5.28
       vue-pivottable:
-        specifier: ^1.2.2
-        version: 1.2.2(sortablejs@1.15.7)(vue@3.5.28)
+        specifier: ^1.3.0
+        version: 1.3.0(sortablejs@1.15.7)(vue@3.5.28)
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.0
@@ -320,8 +320,8 @@ packages:
       vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
 
-  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2':
-    resolution: {integrity: sha512-Q3F8VcFDcu5DiCkAF56ow0UkdNdmLdH/t5CcOOV6d9sWECzss90RmlBYW4OjTBmZRUdQG64YOXKn7SOotqbMAw==}
+  '@vue-pivottable/multi-value-renderer@0.4.0-beta.2':
+    resolution: {integrity: sha512-w+nX2UulTHfebPGE3Md7Ti/DAPDrGYsgQDs6Ms8lJ/8jh3qNNDIAJut0cYtXvUOEtyXJFHXCOdaAueuLa/Eolw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
       vue-pivottable: ^0.4.0 || ^1.0.0
@@ -439,8 +439,8 @@ packages:
       sortablejs: ^1.14.0
       vue: ^3.5.17
 
-  vue-pivottable@1.2.2:
-    resolution: {integrity: sha512-bjBirQb1Cw91x2Xqse7YbPdQmSrPEcq0bof+x8/guanziNi09ML12FzJZpAt8keRgc+r4M1+QyidY3YF3s2uCg==}
+  vue-pivottable@1.3.0:
+    resolution: {integrity: sha512-p30LZDIF0RD4QG4gM69+ORS3/ewkmqx5/T9sOoXGieGeUdeqspVqqDGut8f5x4nzmWSj+Yw28dFklB5/ZP0ppw==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -620,10 +620,10 @@ snapshots:
       vite: 5.4.21
       vue: 3.5.28
 
-  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2(vue-pivottable@1.2.2(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)':
+  '@vue-pivottable/multi-value-renderer@0.4.0-beta.2(vue-pivottable@1.3.0(sortablejs@1.15.7)(vue@3.5.28))(vue@3.5.28)':
     dependencies:
       vue: 3.5.28
-      vue-pivottable: 1.2.2(sortablejs@1.15.7)(vue@3.5.28)
+      vue-pivottable: 1.3.0(sortablejs@1.15.7)(vue@3.5.28)
 
   '@vue/compiler-core@3.5.28':
     dependencies:
@@ -776,7 +776,7 @@ snapshots:
       sortablejs: 1.15.7
       vue: 3.5.28
 
-  vue-pivottable@1.2.2(sortablejs@1.15.7)(vue@3.5.28):
+  vue-pivottable@1.3.0(sortablejs@1.15.7)(vue@3.5.28):
     dependencies:
       vue: 3.5.28
       vue-draggable-next: 2.3.0(sortablejs@1.15.7)(vue@3.5.28)

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@vue-pivottable/multi-value-renderer':
-        specifier: ^0.3.0-beta.1
-        version: 0.3.0-beta.2(vue-pivottable@0.4.72(vue@2.7.16))(vue@2.7.16)
+        specifier: ^0.4.0-beta.2
+        version: 0.4.0-beta.2(vue-pivottable@0.4.72(vue@2.7.16))(vue@2.7.16)
       vue:
         specifier: ^2.7.16
         version: 2.7.16
@@ -317,8 +317,8 @@ packages:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
       vue: ^2.7.0-0
 
-  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2':
-    resolution: {integrity: sha512-Q3F8VcFDcu5DiCkAF56ow0UkdNdmLdH/t5CcOOV6d9sWECzss90RmlBYW4OjTBmZRUdQG64YOXKn7SOotqbMAw==}
+  '@vue-pivottable/multi-value-renderer@0.4.0-beta.2':
+    resolution: {integrity: sha512-w+nX2UulTHfebPGE3Md7Ti/DAPDrGYsgQDs6Ms8lJ/8jh3qNNDIAJut0cYtXvUOEtyXJFHXCOdaAueuLa/Eolw==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
       vue-pivottable: ^0.4.0 || ^1.0.0
@@ -582,7 +582,7 @@ snapshots:
       vite: 5.4.21
       vue: 2.7.16
 
-  '@vue-pivottable/multi-value-renderer@0.3.0-beta.2(vue-pivottable@0.4.72(vue@2.7.16))(vue@2.7.16)':
+  '@vue-pivottable/multi-value-renderer@0.4.0-beta.2(vue-pivottable@0.4.72(vue@2.7.16))(vue@2.7.16)':
     dependencies:
       vue: 2.7.16
       vue-pivottable: 0.4.72(vue@2.7.16)
