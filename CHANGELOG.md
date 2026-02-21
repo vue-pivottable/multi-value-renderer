@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.4.0-beta.6](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.5...v0.4.0-beta.6) (2026-02-20)
+
+## [0.4.0-beta.5](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.4...v0.4.0-beta.5) (2026-02-20)
+
+## [0.4.0-beta.4](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.3...v0.4.0-beta.4) (2026-02-20)
+
+## [0.4.0-beta.3](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2026-02-20)
+
+### Documentation
+
+* **examples:** update example screenshots ([22f5186](https://github.com/vue-pivottable/multi-value-renderer/commit/22f51861fba22d078e071877324e04ef957b8e3d))
+
+## [0.4.0-beta.2](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2026-02-20)
+
+## [0.4.0-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.0...v0.4.0-beta.1) (2026-02-19)
+
+## [0.4.0-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.2-beta.0...v0.4.0-beta.0) (2026-02-19)
+
+### Features
+
+* add dynamic value/aggregator management UI ([20c03a7](https://github.com/vue-pivottable/multi-value-renderer/commit/20c03a717edca8a1b54e03a96fec9f16eb3ff152))
+* **examples:** add profit value and aggregator configuration UI ([2e000c5](https://github.com/vue-pivottable/multi-value-renderer/commit/2e000c5ed35470bc43a26ea82ae4053d939f496d))
+
+### Refactoring
+
+* improve aggregator handling and slot support ([4648ea5](https://github.com/vue-pivottable/multi-value-renderer/commit/4648ea511c3501b2f0e9cb41186fb59edf4d6723))
+
+## [0.3.2-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.1...v0.3.2-beta.0) (2026-02-18)
+
 ## [0.3.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.1-beta.0...v0.3.1) (2026-02-18)
 
 ## [0.3.1-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.3.0...v0.3.1-beta.0) (2026-02-18)
