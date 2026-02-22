@@ -44,15 +44,35 @@
         <template v-slot:aggregatorCell>
           <div class="aggregator-settings">
             <div class="value-row" v-for="(val, index) in vals" :key="val">
+              <!-- Primary field selector -->
               <select class="value-select" :value="val" @change="updateVal(index, $event.target.value)">
-                <option v-for="attr in availableAttributes" :key="attr" :value="attr">{{ attr }}</option>
+                <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
               </select>
-              <select class="agg-select" :value="aggregatorMap[val] || 'Sum'" @change="updateAggregatorMap(val, $event.target.value)">
+
+              <!-- Aggregator selector -->
+              <select
+                class="agg-select"
+                :value="getAggregatorName(val)"
+                @change="updateAggregator(val, $event.target.value)"
+              >
                 <option v-for="agg in aggregatorNames" :key="agg" :value="agg">{{ agg }}</option>
               </select>
+
+              <!-- Second field selector for 2-input aggregators -->
+              <template v-if="isMultiInputAggregator(getAggregatorName(val))">
+                <span class="field-separator">/</span>
+                <select
+                  class="value-select field2-select"
+                  :value="getSecondField(val)"
+                  @change="updateSecondField(val, $event.target.value)"
+                >
+                  <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
+                </select>
+              </template>
+
               <button class="remove-btn" @click="removeVal(index)" v-if="vals.length > 1">×</button>
             </div>
-            <button class="add-btn" @click="addVal" v-if="vals.length < availableAttributes.length">+ Add Value</button>
+            <button class="add-btn" @click="addVal" v-if="vals.length < numericAttributes.length">+ Add Value</button>
           </div>
         </template>
       </VuePivottableUi>
@@ -63,7 +83,7 @@
 
 <script>
 import { VuePivottableUi, PivotUtilities } from 'vue-pivottable'
-import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue2'
+import { MultiValueRenderers, getAggregatorNumInputs } from '@vue-pivottable/multi-value-renderer/vue2'
 import 'vue-pivottable/dist/vue-pivottable.css'
 import '@vue-pivottable/multi-value-renderer/styles.css'
 
@@ -98,28 +118,52 @@ export default {
       aggregators: PivotUtilities.aggregators,
       renderers: MultiValueRenderers,
       aggregatorMap: {
-        sales: 'Sum',
-        quantity: 'Average',
-        profit: 'Sum'
-      }
+        sales: { aggregator: 'Sum', fields: ['sales'] },
+        quantity: { aggregator: 'Average', fields: ['quantity'] },
+        profit: { aggregator: 'Sum', fields: ['profit'] }
+      },
+      aggregatorNumInputsCache: {}
     }
   },
   computed: {
     aggregatorNames() {
       return Object.keys(this.aggregators)
     },
-    availableAttributes() {
+    numericAttributes() {
       if (this.data.length === 0) return []
-      return Object.keys(this.data[0])
+      return Object.keys(this.data[0]).filter(key => typeof this.data[0][key] === 'number')
+    }
+  },
+  created() {
+    // Build cache for aggregator numInputs
+    for (const [name, factory] of Object.entries(this.aggregators)) {
+      this.aggregatorNumInputsCache[name] = getAggregatorNumInputs(factory)
     }
   },
   methods: {
+    isMultiInputAggregator(aggName) {
+      return (this.aggregatorNumInputsCache[aggName] || 0) >= 2
+    },
+    getAggregatorName(val) {
+      const config = this.aggregatorMap[val]
+      if (typeof config === 'object' && config !== null) {
+        return config.aggregator || 'Sum'
+      }
+      return config || 'Sum'
+    },
+    getSecondField(val) {
+      const config = this.aggregatorMap[val]
+      if (typeof config === 'object' && config !== null && config.fields) {
+        return config.fields[1] || this.numericAttributes[0] || ''
+      }
+      return this.numericAttributes.find(attr => attr !== val) || this.numericAttributes[0] || ''
+    },
     addVal() {
-      const available = this.availableAttributes.find(attr => !this.vals.includes(attr))
+      const available = this.numericAttributes.find(attr => !this.vals.includes(attr))
       if (available) {
         this.vals = [...this.vals, available]
         if (!this.aggregatorMap[available]) {
-          this.aggregatorMap = { ...this.aggregatorMap, [available]: 'Sum' }
+          this.aggregatorMap = { ...this.aggregatorMap, [available]: { aggregator: 'Sum', fields: [available] } }
         }
       }
     },
@@ -133,13 +177,60 @@ export default {
       const oldVal = newVals[index]
       newVals[index] = newVal
       this.vals = newVals
+
       if (!this.aggregatorMap[newVal] && this.aggregatorMap[oldVal]) {
-        this.aggregatorMap = { ...this.aggregatorMap, [newVal]: this.aggregatorMap[oldVal] }
+        const oldConfig = this.aggregatorMap[oldVal]
+        if (typeof oldConfig === 'object' && oldConfig !== null) {
+          this.aggregatorMap = {
+            ...this.aggregatorMap,
+            [newVal]: {
+              aggregator: oldConfig.aggregator,
+              fields: [newVal, oldConfig.fields[1]]
+            }
+          }
+        } else {
+          this.aggregatorMap = { ...this.aggregatorMap, [newVal]: oldConfig }
+        }
       }
     },
-    updateAggregatorMap(val, aggName) {
-      // Create new object to trigger vue-pivottable's watch
-      this.aggregatorMap = { ...this.aggregatorMap, [val]: aggName }
+    updateAggregator(val, aggName) {
+      const isMultiInput = this.isMultiInputAggregator(aggName)
+      // Get first field from existing config or use val
+      const existingConfig = this.aggregatorMap[val]
+      const firstField = (typeof existingConfig === 'object' && existingConfig !== null && existingConfig.fields)
+        ? existingConfig.fields[0]
+        : val
+
+      if (isMultiInput) {
+        const secondField = this.numericAttributes.find(attr => attr !== firstField) || this.numericAttributes[0] || ''
+        this.aggregatorMap = {
+          ...this.aggregatorMap,
+          [val]: {
+            aggregator: aggName,
+            fields: [firstField, secondField]
+          }
+        }
+      } else {
+        this.aggregatorMap = {
+          ...this.aggregatorMap,
+          [val]: {
+            aggregator: aggName,
+            fields: [firstField]
+          }
+        }
+      }
+    },
+    updateSecondField(val, secondField) {
+      const config = this.aggregatorMap[val]
+      if (typeof config === 'object' && config !== null) {
+        this.aggregatorMap = {
+          ...this.aggregatorMap,
+          [val]: {
+            aggregator: config.aggregator,
+            fields: [config.fields[0] || val, secondField]
+          }
+        }
+      }
     }
   }
 }
@@ -241,6 +332,7 @@ p {
   align-items: center;
   gap: 4px;
   margin-bottom: 4px;
+  flex-wrap: wrap;
 }
 
 .value-select,
@@ -259,7 +351,17 @@ p {
 }
 
 .agg-select {
-  min-width: 70px;
+  min-width: 100px;
+}
+
+.field-separator {
+  font-weight: bold;
+  color: #506784;
+  padding: 0 2px;
+}
+
+.field2-select {
+  background: #f0f4f8;
 }
 
 .value-select:hover,
