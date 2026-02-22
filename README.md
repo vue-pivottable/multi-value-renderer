@@ -174,16 +174,64 @@ Or customize with your own CSS targeting these classes:
 
 ## Available Aggregators
 
-The renderer uses aggregators from vue-pivottable. Common options:
+The renderer supports all aggregators from vue-pivottable:
+
+### Single-Input Aggregators
 
 - `Count`
+- `Count Unique Values`
+- `List Unique Values`
 - `Sum`
+- `Integer Sum`
 - `Average`
+- `Median`
 - `Minimum`
 - `Maximum`
-- `Median`
+- `First`
+- `Last`
 - `Sample Variance`
 - `Sample Standard Deviation`
+
+### Multi-Input Aggregators
+
+Multi-input aggregators (like `Sum over Sum`) compute relationships between two fields. When selected, an additional field selector appears in the UI.
+
+- `Sum over Sum` - Calculates sum(field1) / sum(field2)
+- `Sum as Fraction of Total`
+- `Sum as Fraction of Rows`
+- `Sum as Fraction of Columns`
+- `Count as Fraction of Total`
+- `Count as Fraction of Rows`
+- `Count as Fraction of Columns`
+
+#### Configuration Format
+
+For multi-input aggregators, use an object format in `aggregatorMap`:
+
+```js
+const aggregatorMap = {
+  // Single-input: string format
+  sales: 'Sum',
+  quantity: 'Average',
+
+  // Multi-input: object format with fields array
+  unit_price: {
+    aggregator: 'Sum over Sum',
+    fields: ['sales', 'quantity']  // sum(sales) / sum(quantity)
+  }
+}
+```
+
+#### Helper Function
+
+Use `getAggregatorNumInputs` to check if an aggregator requires multiple inputs:
+
+```js
+import { getAggregatorNumInputs } from '@vue-pivottable/multi-value-renderer/vue3'
+
+const numInputs = getAggregatorNumInputs(aggregators['Sum over Sum'])
+// Returns 2 for multi-input aggregators
+```
 
 ## License
 
