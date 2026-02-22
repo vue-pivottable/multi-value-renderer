@@ -1,7 +1,8 @@
 export {
   createMultiAggregator,
   defaultColorScaleGenerator,
-  validateAggregatorMap
+  validateAggregatorMap,
+  getAggregatorNumInputs
 } from './multiAggregator'
 
 export {
