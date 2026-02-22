@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.6.0-beta.0...v0.6.0-beta.1) (2026-02-22)
+
+### Documentation
+
+* **examples:** update screenshot images ([94e20eb](https://github.com/vue-pivottable/multi-value-renderer/commit/94e20eb9856dfae96cf4fb86b69da8bec1143948))
+
 ## [0.6.0-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0...v0.6.0-beta.0) (2026-02-22)
 
 ### Features
