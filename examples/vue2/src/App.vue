@@ -43,39 +43,55 @@
       >
         <template v-slot:aggregatorCell>
           <div class="aggregator-settings">
-            <div class="value-row" v-for="(val, index) in vals" :key="val">
-              <!-- Primary field selector -->
-              <select class="value-select" :value="val" @change="updateVal(index, $event.target.value)">
-                <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
-              </select>
-
-              <!-- Aggregator selector -->
-              <select
-                class="agg-select"
-                :value="getAggregatorName(val)"
-                @change="updateAggregator(val, $event.target.value)"
+            <div class="value-tags">
+              <span
+                v-for="(val, index) in vals"
+                :key="val"
+                class="value-tag"
+                @click="openEditModal(index)"
               >
-                <option v-for="agg in aggregatorNames" :key="agg" :value="agg">{{ agg }}</option>
-              </select>
-
-              <!-- Second field selector for 2-input aggregators -->
-              <template v-if="isMultiInputAggregator(getAggregatorName(val))">
-                <span class="field-separator">/</span>
-                <select
-                  class="value-select field2-select"
-                  :value="getSecondField(val)"
-                  @change="updateSecondField(val, $event.target.value)"
-                >
-                  <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
-                </select>
-              </template>
-
-              <button class="remove-btn" @click="removeVal(index)" v-if="vals.length > 1">×</button>
+                {{ getValueLabel(val) }}
+                <button class="tag-remove" @click.stop="removeVal(index)" v-if="vals.length > 1">×</button>
+              </span>
+              <button class="add-tag" @click="openAddModal">+</button>
             </div>
-            <button class="add-btn" @click="addVal" v-if="vals.length < numericAttributes.length">+ Add Value</button>
           </div>
         </template>
       </VuePivottableUi>
+    </div>
+
+    <!-- Modal -->
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>{{ isEditMode ? 'Edit Value' : 'Add Value' }}</h3>
+          <button class="modal-close" @click="closeModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Aggregator</label>
+            <select v-model="modalData.aggregator" class="form-select" @change="onAggregatorChange">
+              <option v-for="agg in aggregatorNames" :key="agg" :value="agg">{{ agg }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>{{ isModalMultiInput ? 'First Field (numerator)' : 'Field' }}</label>
+            <select v-model="modalData.field" class="form-select">
+              <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
+            </select>
+          </div>
+          <div v-if="isModalMultiInput" class="form-group">
+            <label>Second Field (denominator)</label>
+            <select v-model="modalData.field2" class="form-select">
+              <option v-for="attr in numericAttributes" :key="attr" :value="attr">{{ attr }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeModal">Cancel</button>
+          <button class="btn btn-primary" @click="saveModal">{{ isEditMode ? 'Save' : 'Add' }}</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -83,9 +99,21 @@
 
 <script>
 import { VuePivottableUi, PivotUtilities } from 'vue-pivottable'
-import { MultiValueRenderers, getAggregatorNumInputs } from '@vue-pivottable/multi-value-renderer/vue2'
+import { MultiValueRenderers } from '@vue-pivottable/multi-value-renderer/vue2'
 import 'vue-pivottable/dist/vue-pivottable.css'
 import '@vue-pivottable/multi-value-renderer/styles.css'
+
+/**
+ * Gets the number of inputs required by an aggregator
+ */
+function getAggregatorNumInputs(aggFactory) {
+  try {
+    const instance = aggFactory([])()
+    return instance.numInputs || 0
+  } catch {
+    return 1
+  }
+}
 
 export default {
   name: 'App',
@@ -122,7 +150,16 @@ export default {
         quantity: { aggregator: 'Average', fields: ['quantity'] },
         profit: { aggregator: 'Sum', fields: ['profit'] }
       },
-      aggregatorNumInputsCache: {}
+      aggregatorNumInputsCache: {},
+      // Modal state
+      showModal: false,
+      isEditMode: false,
+      editIndex: -1,
+      modalData: {
+        field: '',
+        aggregator: 'Sum',
+        field2: ''
+      }
     }
   },
   computed: {
@@ -132,6 +169,9 @@ export default {
     numericAttributes() {
       if (this.data.length === 0) return []
       return Object.keys(this.data[0]).filter(key => typeof this.data[0][key] === 'number')
+    },
+    isModalMultiInput() {
+      return this.isMultiInputAggregator(this.modalData.aggregator)
     }
   },
   created() {
@@ -144,93 +184,122 @@ export default {
     isMultiInputAggregator(aggName) {
       return (this.aggregatorNumInputsCache[aggName] || 0) >= 2
     },
-    getAggregatorName(val) {
+    getValueLabel(val) {
       const config = this.aggregatorMap[val]
       if (typeof config === 'object' && config !== null) {
-        return config.aggregator || 'Sum'
+        if (config.fields && config.fields.length >= 2) {
+          return `${config.fields[0]}/${config.fields[1]} (${config.aggregator})`
+        }
+        return `${config.fields?.[0] || val} (${config.aggregator})`
       }
-      return config || 'Sum'
+      return `${val} (${config || 'Sum'})`
     },
-    getSecondField(val) {
+    openAddModal() {
+      this.isEditMode = false
+      this.editIndex = -1
+      this.modalData = {
+        field: this.numericAttributes.find(attr => !this.vals.includes(attr)) || this.numericAttributes[0] || '',
+        aggregator: 'Sum',
+        field2: this.numericAttributes[1] || this.numericAttributes[0] || ''
+      }
+      this.showModal = true
+    },
+    openEditModal(index) {
+      this.isEditMode = true
+      this.editIndex = index
+      const val = this.vals[index]
       const config = this.aggregatorMap[val]
-      if (typeof config === 'object' && config !== null && config.fields) {
-        return config.fields[1] || this.numericAttributes[0] || ''
-      }
-      return this.numericAttributes.find(attr => attr !== val) || this.numericAttributes[0] || ''
-    },
-    addVal() {
-      const available = this.numericAttributes.find(attr => !this.vals.includes(attr))
-      if (available) {
-        this.vals = [...this.vals, available]
-        if (!this.aggregatorMap[available]) {
-          this.aggregatorMap = { ...this.aggregatorMap, [available]: { aggregator: 'Sum', fields: [available] } }
+
+      if (typeof config === 'object' && config !== null) {
+        this.modalData = {
+          field: config.fields[0] || val,
+          aggregator: config.aggregator || 'Sum',
+          field2: config.fields[1] || ''
+        }
+      } else {
+        this.modalData = {
+          field: val,
+          aggregator: config || 'Sum',
+          field2: this.numericAttributes.find(attr => attr !== val) || ''
         }
       }
+      this.showModal = true
     },
-    removeVal(index) {
-      const newVals = [...this.vals]
-      newVals.splice(index, 1)
-      this.vals = newVals
+    closeModal() {
+      this.showModal = false
     },
-    updateVal(index, newVal) {
-      const newVals = [...this.vals]
-      const oldVal = newVals[index]
-      newVals[index] = newVal
-      this.vals = newVals
+    onAggregatorChange() {
+      // Set default second field when switching to multi-input
+      if (this.isModalMultiInput && !this.modalData.field2) {
+        this.modalData.field2 = this.numericAttributes.find(attr => attr !== this.modalData.field) || ''
+      }
+    },
+    saveModal() {
+      const { field, aggregator, field2 } = this.modalData
+      const isMulti = this.isMultiInputAggregator(aggregator)
 
-      if (!this.aggregatorMap[newVal] && this.aggregatorMap[oldVal]) {
-        const oldConfig = this.aggregatorMap[oldVal]
-        if (typeof oldConfig === 'object' && oldConfig !== null) {
-          this.aggregatorMap = {
-            ...this.aggregatorMap,
-            [newVal]: {
-              aggregator: oldConfig.aggregator,
-              fields: [newVal, oldConfig.fields[1]]
-            }
+      // Generate unique key for this value entry
+      let valKey = field
+      if (isMulti) {
+        valKey = `${field}_${field2}_ratio`
+      }
+
+      // For edit mode, remove old entry first
+      if (this.isEditMode && this.editIndex >= 0) {
+        const oldVal = this.vals[this.editIndex]
+        const newVals = [...this.vals]
+        newVals[this.editIndex] = valKey
+        this.vals = newVals
+
+        // Remove old aggregatorMap entry if key changed
+        if (oldVal !== valKey) {
+          const newMap = { ...this.aggregatorMap }
+          delete newMap[oldVal]
+          this.aggregatorMap = newMap
+        }
+      } else {
+        // Add mode - check for duplicates
+        if (this.vals.includes(valKey)) {
+          let counter = 1
+          while (this.vals.includes(`${valKey}_${counter}`)) {
+            counter++
           }
-        } else {
-          this.aggregatorMap = { ...this.aggregatorMap, [newVal]: oldConfig }
+          valKey = `${valKey}_${counter}`
         }
+        this.vals = [...this.vals, valKey]
       }
-    },
-    updateAggregator(val, aggName) {
-      const isMultiInput = this.isMultiInputAggregator(aggName)
-      // Get first field from existing config or use val
-      const existingConfig = this.aggregatorMap[val]
-      const firstField = (typeof existingConfig === 'object' && existingConfig !== null && existingConfig.fields)
-        ? existingConfig.fields[0]
-        : val
 
-      if (isMultiInput) {
-        const secondField = this.numericAttributes.find(attr => attr !== firstField) || this.numericAttributes[0] || ''
+      // Set aggregatorMap entry - always use object format to preserve field info
+      if (isMulti) {
         this.aggregatorMap = {
           ...this.aggregatorMap,
-          [val]: {
-            aggregator: aggName,
-            fields: [firstField, secondField]
+          [valKey]: {
+            aggregator,
+            fields: [field, field2]
           }
         }
       } else {
         this.aggregatorMap = {
           ...this.aggregatorMap,
-          [val]: {
-            aggregator: aggName,
-            fields: [firstField]
+          [valKey]: {
+            aggregator,
+            fields: [field]
           }
         }
       }
+
+      this.closeModal()
     },
-    updateSecondField(val, secondField) {
-      const config = this.aggregatorMap[val]
-      if (typeof config === 'object' && config !== null) {
-        this.aggregatorMap = {
-          ...this.aggregatorMap,
-          [val]: {
-            aggregator: config.aggregator,
-            fields: [config.fields[0] || val, secondField]
-          }
-        }
-      }
+    removeVal(index) {
+      const val = this.vals[index]
+      const newVals = [...this.vals]
+      newVals.splice(index, 1)
+      this.vals = newVals
+
+      // Clean up aggregatorMap
+      const newMap = { ...this.aggregatorMap }
+      delete newMap[val]
+      this.aggregatorMap = newMap
     }
   }
 }
@@ -265,12 +334,6 @@ h2 {
   font-size: 1.2em;
 }
 
-h3 {
-  color: #555;
-  margin-bottom: 10px;
-  font-size: 1em;
-}
-
 p {
   color: #666;
   margin-bottom: 20px;
@@ -286,7 +349,6 @@ p {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
 .tabs button {
@@ -303,7 +365,6 @@ p {
 
 .tabs button:hover {
   background: #f0f0f0;
-  border-color: #ccc;
 }
 
 .tabs button.active {
@@ -321,90 +382,184 @@ p {
   overflow-x: auto;
 }
 
+/* Aggregator Settings - Tag Style */
 .aggregator-settings {
-  font-family: Verdana, sans-serif;
-  color: #2a3f5f;
   padding: 5px;
 }
 
-.value-row {
+.value-tags {
   display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.value-tag {
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-bottom: 4px;
-  flex-wrap: wrap;
-}
-
-.value-select,
-.agg-select {
-  padding: 3px 6px;
-  border: 1px solid #a2b1c6;
-  border-radius: 5px;
-  font-size: 12px;
-  background: #fff;
-  color: #2a3f5f;
-  cursor: pointer;
-}
-
-.value-select {
-  min-width: 80px;
-}
-
-.agg-select {
-  min-width: 100px;
-}
-
-.field-separator {
-  font-weight: bold;
-  color: #506784;
-  padding: 0 2px;
-}
-
-.field2-select {
-  background: #f0f4f8;
-}
-
-.value-select:hover,
-.agg-select:hover {
-  border-color: #506784;
-}
-
-.value-select:focus,
-.agg-select:focus {
-  outline: none;
-  border-color: #119dff;
-}
-
-.remove-btn {
-  background: none;
-  border: 1px solid #c8d4e3;
-  border-radius: 3px;
-  color: #506784;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  padding: 2px 6px;
-}
-
-.remove-btn:hover {
-  background: #ebf0f8;
-  border-color: #a2b1c6;
-}
-
-.add-btn {
-  background: #fff;
-  border: 1px solid #a2b1c6;
-  border-radius: 5px;
-  color: #506784;
-  cursor: pointer;
-  font-size: 12px;
   padding: 4px 8px;
-  margin-top: 2px;
+  background: #e8f0fe;
+  border: 1px solid #a8c7fa;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #1967d2;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.add-btn:hover {
-  background: #ebf0f8;
-  border-color: #506784;
+.value-tag:hover {
+  background: #d2e3fc;
+  border-color: #7cacf8;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  color: #5f6368;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.tag-remove:hover {
+  color: #d93025;
+}
+
+.add-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 1px dashed #a8c7fa;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #1967d2;
+  cursor: pointer;
+}
+
+.add-tag:hover {
+  background: #e8f0fe;
+  border-style: solid;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 360px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #4a90d9;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.1);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: #4a90d9;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #3a7bc8;
 }
 
 /* Responsive */
