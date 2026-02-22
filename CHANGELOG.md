@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0-beta.2](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2026-02-22)
+
+## [0.5.0-beta.1](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0-beta.0...v0.5.0-beta.1) (2026-02-22)
+
+## [0.5.0-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.1-beta.0...v0.5.0-beta.0) (2026-02-22)
+
+### Features
+
+* **core:** add multi-input aggregator support ([c26f826](https://github.com/vue-pivottable/multi-value-renderer/commit/c26f8269528ad6b7f6c68c42c73ae4199f5414f6))
+* **vue2-example:** implement multi-input aggregator demo ([3fb216a](https://github.com/vue-pivottable/multi-value-renderer/commit/3fb216ab61397869cc872fa187cd3ad0213c5087))
+* **vue2:** add multi-input aggregator UI support ([044e356](https://github.com/vue-pivottable/multi-value-renderer/commit/044e356c64150e13094d6d9812de52778650088a))
+* **vue3-example:** implement multi-input aggregator demo ([8c8f347](https://github.com/vue-pivottable/multi-value-renderer/commit/8c8f34723b08d82821595f3a0e201e5c2d4079d6))
+* **vue3:** add multi-input aggregator UI support ([716c54e](https://github.com/vue-pivottable/multi-value-renderer/commit/716c54e15bb9d86740888b93ad922280fbcb54c1))
+
+### Documentation
+
+* **readme:** add multi-input aggregator documentation ([654495b](https://github.com/vue-pivottable/multi-value-renderer/commit/654495b0f2a03e828d8d74c2e31b6d92ac857e64))
+
+## [0.4.1-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0...v0.4.1-beta.0) (2026-02-21)
+
 ## [0.4.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.6...v0.4.0) (2026-02-21)
 
 ## [0.4.0-beta.6](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.4.0-beta.5...v0.4.0-beta.6) (2026-02-20)

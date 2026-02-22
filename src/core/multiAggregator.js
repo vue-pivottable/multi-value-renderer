@@ -2,19 +2,42 @@
  * Multi-Value Aggregator
  *
  * Allows different aggregation functions for each value column.
- * For example: Sum for 'sales', Average for 'quantity'
+ * Supports both single-input and multi-input aggregators.
  *
  * @example
+ * // Single-input aggregators (string format)
  * const aggregatorMap = {
  *   sales: 'Sum',
  *   quantity: 'Average',
  *   count: 'Count'
  * }
+ *
+ * // Multi-input aggregators (object format)
+ * const aggregatorMap = {
+ *   sales: 'Sum',
+ *   unit_price: { aggregator: 'Sum over Sum', fields: ['sales', 'quantity'] }
+ * }
  */
 
 /**
+ * Gets the number of inputs required by an aggregator
+ * @param {Function} aggFactory - Aggregator factory function
+ * @returns {number} Number of inputs required
+ */
+export function getAggregatorNumInputs(aggFactory) {
+  try {
+    const instance = aggFactory([])()
+    return instance.numInputs || 0
+  } catch {
+    return 1
+  }
+}
+
+/**
  * Creates a multi-value aggregator factory
- * @param {Object} aggregatorMap - Map of value names to aggregator names
+ * @param {Object} aggregatorMap - Map of value names to aggregator configs
+ *   - string: aggregator name for single-input (e.g., 'Sum')
+ *   - object: { aggregator: string, fields: string[] } for multi-input
  * @param {Object} aggregators - Available aggregators from PivotUtilities
  * @returns {Function} Aggregator factory function
  */
@@ -28,10 +51,23 @@ export function createMultiAggregator(aggregatorMap, aggregators) {
 
       // Initialize sub-aggregators for each value
       vals.forEach(val => {
-        const aggName = aggregatorMap[val] || defaultAggregator
+        const aggConfig = aggregatorMap[val]
+        let aggName, aggFields
+
+        if (typeof aggConfig === 'object' && aggConfig !== null) {
+          // Multi-input aggregator: { aggregator: 'Sum over Sum', fields: ['sales', 'quantity'] }
+          aggName = aggConfig.aggregator || defaultAggregator
+          aggFields = aggConfig.fields || [val]
+        } else {
+          // Single-input aggregator: 'Sum'
+          aggName = aggConfig || defaultAggregator
+          aggFields = [val]
+        }
+
         const aggFactory = aggregators[aggName]
         if (aggFactory) {
-          subAggregators[val] = aggFactory([val])(data, rowKey, colKey)
+          // Pass fields as array - vue-pivottable aggregators expect array destructuring
+          subAggregators[val] = aggFactory(aggFields)(data, rowKey, colKey)
         }
       })
 

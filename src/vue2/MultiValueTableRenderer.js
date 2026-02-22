@@ -26,21 +26,40 @@ const { PivotData } = PivotUtilities
 /**
  * Creates a multi-value aggregator that processes multiple values with different aggregators
  * Inlined here to avoid chunk import issues in bundled output
- * @param {Object} aggregatorMap - Map of value names to aggregator names
+ * Supports both single-input (string) and multi-input (object) aggregator configs
+ *
+ * @param {Object} aggregatorMap - Map of value names to aggregator configs
+ *   - string: aggregator name for single-input (e.g., 'Sum')
+ *   - object: { aggregator: string, fields: string[] } for multi-input
  * @param {Object} aggregators - Available aggregators
  * @param {Array} vals - Value column names
  * @returns {Function} Multi-value aggregator factory
  */
 function createMultiValueAggregator(aggregatorMap, aggregators, vals) {
+  const defaultAggregator = 'Sum'
+
   return function multiValueAggregatorFactory(data, rowKey, colKey) {
     const subAggregators = {}
 
     // Initialize a sub-aggregator for each value
     vals.forEach(val => {
-      const aggName = aggregatorMap[val] || 'Sum'
+      const aggConfig = aggregatorMap[val]
+      let aggName, aggFields
+
+      if (typeof aggConfig === 'object' && aggConfig !== null) {
+        // Multi-input aggregator: { aggregator: 'Sum over Sum', fields: ['sales', 'quantity'] }
+        aggName = aggConfig.aggregator || defaultAggregator
+        aggFields = aggConfig.fields || [val]
+      } else {
+        // Single-input aggregator: 'Sum'
+        aggName = aggConfig || defaultAggregator
+        aggFields = [val]
+      }
+
       const aggFactory = aggregators[aggName]
       if (aggFactory) {
-        subAggregators[val] = aggFactory([val])(data, rowKey, colKey)
+        // Pass fields as array - vue-pivottable aggregators expect array destructuring
+        subAggregators[val] = aggFactory(aggFields)(data, rowKey, colKey)
       }
     })
 
@@ -231,9 +250,23 @@ export function makeMultiValueRenderer(opts = {}) {
        * Get display label for a value column
        */
       getValueLabel(valName) {
+        // Check for custom label first
         if (this.valueLabels && this.valueLabels[valName]) {
           return this.valueLabels[valName]
         }
+
+        // For object format aggregators, generate a descriptive label
+        const aggConfig = this.aggregatorMap[valName]
+        if (typeof aggConfig === 'object' && aggConfig !== null && aggConfig.fields) {
+          const fields = aggConfig.fields
+          // For multi-input: "sales/quantity"
+          if (fields.length >= 2) {
+            return `${fields[0]}/${fields[1]}`
+          }
+          // For single-input object format: just the field name
+          return fields[0] || valName
+        }
+
         return valName
       },
 
@@ -269,11 +302,21 @@ export function makeMultiValueRenderer(opts = {}) {
        * Format a single value using the appropriate aggregator
        */
       formatValue(valName, value) {
-        const aggName = this.aggregatorMap[valName] || 'Sum'
+        const aggConfig = this.aggregatorMap[valName]
+        let aggName, aggFields
+
+        if (typeof aggConfig === 'object' && aggConfig !== null) {
+          aggName = aggConfig.aggregator || 'Sum'
+          aggFields = aggConfig.fields || [valName]
+        } else {
+          aggName = aggConfig || 'Sum'
+          aggFields = [valName]
+        }
+
         const agg = this.aggregators[aggName]
         if (agg) {
           try {
-            const instance = agg([valName])()
+            const instance = agg(aggFields)()
             if (instance && instance.format) {
               return instance.format(value)
             }
