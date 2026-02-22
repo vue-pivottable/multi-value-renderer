@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0-beta.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0...v0.6.0-beta.0) (2026-02-22)
+
+### Features
+
+* **examples:** enhance Vue2 multi-value pivot table example ([b5337e0](https://github.com/vue-pivottable/multi-value-renderer/commit/b5337e04dd455d5ddeac549e7600c27f16982c55))
+
 ## [0.5.0](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0-beta.2...v0.5.0) (2026-02-22)
 
 ## [0.5.0-beta.2](https://github.com/vue-pivottable/multi-value-renderer/compare/v0.5.0-beta.1...v0.5.0-beta.2) (2026-02-22)
